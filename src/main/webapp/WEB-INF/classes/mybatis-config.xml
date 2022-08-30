@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org/DTD config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- null 입력 전면 허용 -->
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="topia.com.myApp.entity.BoardFree" alias="boardFree"/>
+		<typeAlias type="topia.com.myApp.dto.BoardFreeDTO" alias="boardFreeDTO"/>
+		<typeAlias type="topia.com.myApp.entity.Member" alias="member"/>
+		<typeAlias type="topia.com.myApp.dto.MemberDTO" alias="memberDTO"/>
+		<typeAlias type="topia.com.myApp.dto.LoginInfoDTO" alias="loginInfo"/>
+		<typeAlias type="topia.com.myApp.entity.BoardYoutube" alias="boardYtb"/>
+		<typeAlias type="topia.com.myApp.entity.YtbSubscribes" alias="subs"/>
+		<typeAlias type="topia.com.myApp.entity.MemberProfileImg" alias="img"/>
+		<typeAlias type="topia.com.myApp.entity.YtbReply" alias="re"/>
+		<typeAlias type="topia.com.myApp.entity.YtbReplyReply" alias="rere"/>
+	</typeAliases>
+</configuration>

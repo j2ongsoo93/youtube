@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:s="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+    <s:http auto-config='true' use-expressions="true">
+        <s:intercept-url pattern="/resources/**" access="permitAll" />
+        <s:intercept-url pattern="/member/login/" access="permitAll" />
+        <s:intercept-url pattern="/member/login/**" access="permitAll" />
+        <s:intercept-url pattern="/member/sign-up/**" access="permitAll" />
+        <s:intercept-url pattern="/member/sign-up/**/**" access="permitAll" />
+        <s:intercept-url pattern="/member/insert" access="permitAll" />
+        <s:intercept-url pattern="/member/update" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_USER')" />
+        <s:intercept-url pattern="/youtube/**" access="permitAll" />
+        <s:intercept-url pattern="/youtube/reg" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER','ROLE_USER')" />
+        <s:intercept-url pattern="/youtube/subsChannel" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER','ROLE_USER')" />
+        <s:intercept-url pattern="/youtube/cancelChannel" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER','ROLE_USER')" />
+        <s:intercept-url pattern="/youtube/myPage/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER','ROLE_USER')"/>
+        <s:form-login
+                login-page="/member/login"
+                login-processing-url="/member/login/check"
+                authentication-failure-url="/member/login?error"
+                username-parameter="memId"
+                password-parameter="password"
+                authentication-success-handler-ref="loginSuccessHandler"/>
+
+        <s:logout logout-url="/logout"
+                  logout-success-url="/youtube/home"
+                  invalidate-session="true"
+                  delete-cookies="true"/>
+
+        <s:session-management>
+            <s:concurrency-control max-sessions="1" expired-url="/"/>
+        </s:session-management>
+
+        <s:access-denied-handler error-page="/member/login"/>
+    </s:http>
+
+    <beans:bean id="loginSuccessHandler" class="topia.com.myApp.cont.LoginSuccessHandler">
+        <beans:property name="memId" value="memId"/>
+        <beans:property name="defaultUrl" value="/youtube/home"/>
+    </beans:bean>
+
+    <s:authentication-manager>
+        <s:authentication-provider>
+            <!--            <s:user-service>-->
+            <!--                <s:user name="admin" password="1234" authorities="ROLE_USER, ROLE_ADMIN" />-->
+            <!--                <s:user name="guest" password="1234" authorities="ROLE_USER" />-->
+            <!--                <s:user name="guest2" password="a1234" authorities="ROLE_USER" />-->
+            <!--            </s:user-service>-->
+            <s:jdbc-user-service
+                    id="jdbcUserDetailsManager"
+                    data-source-ref="dataSource"
+                    users-by-username-query="SELECT MEM_ID as username,
+                                         PASSWORD,
+                                         enabled
+                                         FROM MEMBER WHERE MEM_ID=?"
+                    authorities-by-username-query="SELECT MEM_ID as username,
+                                               CASE WHEN AUTHORITY='master' THEN 'ROLE_ADMIN'
+                                                    WHEN AUTHORITY='manager' THEN 'ROLE_MANAGER'
+                                                    ELSE 'ROLE_USER'
+                                               END authority
+                                               FROM MEMBER_AUTH WHERE MEM_ID=?"
+            />
+        </s:authentication-provider>
+    </s:authentication-manager>
+
+</beans:beans>

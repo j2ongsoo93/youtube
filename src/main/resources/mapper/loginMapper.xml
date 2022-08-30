@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="login">
+	<select id="getInfo" resultType="loginInfo">
+		SELECT m.MEM_ID, m.MEM_NAME, a.AUTHORITY, i.IMG_FILE_NAME
+		FROM MEMBER m, MEMBER_AUTH a
+		LEFT JOIN MEMBER_PROFILE_IMG i ON a.MEM_ID = i.MEM_ID
+		WHERE   m.MEM_ID = a.MEM_ID and
+		m.MEM_ID = #{memId}
+	</select>
+</mapper>

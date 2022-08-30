@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="boardYtb">
+	<resultMap id="boardYtb" type="boardYtb">
+		<result column="YTB_IDX" 			property="ytbIdx"/>
+		<result column="YTB_TITLE" 			property="ytbTitle"/>
+		<result column="YTB_URL" 			property="ytbUrl"/>
+		<result column="YTB_INFO" 			property="ytbInfo"/>
+		<result column="YTB_REGDATE" 		property="ytbRegDate"/>
+		<result column="YTB_HIT" 			property="ytbHit"/>
+		<result column="YTB_LIKE" 			property="ytbLike"/>
+		<result column="YTB_CHANNEL_NAME" 	property="ytbChannelName"/>
+		<result column="YTB_CHANNEL_URL" 	property="ytbChannelUrl"/>
+		<result column="YTB_THUMBNAIL" 		property="ytbThumbnail"/>
+		<result column="MEM_ID" 			property="memId"/>
+		<result column="YTB_CHANNEL_THUMB" 	property="ytbChannelThumb"/>
+		<result column="YTB_EMBED_URL" 		property="ytbEmbedUrl"/>
+	</resultMap>
+	
+	<resultMap id="subs" type="subs">
+		<result column="SUB_IDX"			property="subIdx"/>
+		<result column="MEM_ID"				property="memId"/>
+		<result column="YTB_CHANNEL_NAME"	property="ytbChannelName"/>
+	</resultMap>
+
+	<resultMap id="re" type="re">
+		<result column="RE_IDX"				property="reIdx"/>
+		<result column="MEM_ID"				property="memId"/>
+		<result column="RE_CONTENT"			property="reContent"/>
+		<result column="RE_REG_DATE"		property="reRegDate"/>
+		<result column="RE_UPDATE_DATE"		property="reUpdateDate"/>
+		<result column="YTB_IDX"			property="ytbIdx"/>
+	</resultMap>
+
+	<resultMap id="rere" type="rere">
+		<result column="RERE_IDX" 			property="rereIdx"/>
+		<result column="RE_IDX" 			property="reIdx"/>
+		<result column="MEM_ID" 			property="memId"/>
+		<result column="RERE_CONTENT" 		property="rereContent"/>
+		<result column="RERE_REG_DATE" 		property="rereRegDate"/>
+		<result column="RERE_ANNOTATION" 	property="rereAnnotation"/>
+	</resultMap>
+
+	<!-- DYNAMIC -->
+	<sql id="listMainWhere">
+		<where>
+			<if test="keyword != null">
+				ytbTitle LIKE '%${keyword}%'
+			</if>
+		</where>
+	</sql>
+
+	<!-- SELECT -->
+	<!-- 영상 리스트 -->
+	<select id="listVideo" resultMap="boardYtb" parameterType="hashmap">
+		SELECT B.* FROM
+		    (SELECT ROWNUM AS RNUM, A.* FROM
+				(SELECT * FROM BOARD_YOUTUBE
+				<if test="keyword != null and keyword != ''">
+					WHERE
+					YTB_TITLE LIKE '%${keyword}%' OR
+					YTB_CHANNEL_NAME LIKE '%${keyword}%' OR
+					MEM_ID LIKE '%${keyword}%'
+				</if>
+				<if test="memId != null and memId != ''">
+					WHERE
+					MEM_ID = '${memId}'
+				</if>
+				ORDER BY YTB_REGDATE DESC)A)B
+		WHERE RNUM BETWEEN #{start} and #{end}
+	</select>
+
+	<!-- 영상 상세 -->
+	<select id="detailVideo" resultMap="boardYtb">
+		SELECT * FROM BOARD_YOUTUBE
+		WHERE YTB_IDX = #{ytbIdx}
+	</select>
+	
+	<!-- 구독 채널 조회 -->
+	<select id="subsList" resultMap="boardYtb" parameterType="String">
+		select distinct ytb_channel_name, YTB_CHANNEL_THUMB, YTB_CHANNEL_URL
+		FROM BOARD_YOUTUBE
+		where YTB_CHANNEL_NAME in(select distinct ytb_channel_name
+		                          from YTB_SUBSCRIBES
+		                          where mem_id = #{memId})
+	</select>
+
+	<!-- 채널 구독 여부 조회 -->
+	<select id="isSubscribed" resultMap="subs" parameterType="hashmap">
+		SELECT * FROM YTB_SUBSCRIBES
+		WHERE MEM_ID = #{memId} and YTB_CHANNEL_NAME = #{ytbChannelName}
+	</select>
+
+	<!-- 내가 등록한 영상 조회 -->
+	<select id="myVideos" parameterType="String">
+		SELECT * FROM BOARD_YOUTUBE WHERE MEM_ID=#{memId}
+	</select>
+
+	<!-- 댓글 조회 -->
+	<select id="listRe" resultMap="re" parameterType="Integer">
+		SELECT * FROM YTB_REPLY WHERE YTB_IDX=#{ytbIdx} ORDER BY RE_REG_DATE DESC
+	</select>
+
+	<!-- 댓글 조회 -->
+	<select id="listReRe" resultMap="rere">
+		SELECT * FROM YTB_REPLY_REPLY WHERE RE_IDX=#{reIdx} ORDER BY RERE_REG_DATE DESC
+	</select>
+
+	<!-- INSERT -->
+	<!-- 영상 등록 -->
+	<insert id="insertYtb" parameterType="hashmap">
+		<selectKey keyProperty="ytbIdx" resultType="Integer" order="BEFORE">
+			SELECT BOARD_YOUTUBE_SEQ.nextval AS ytbIdx FROM DUAL
+		</selectKey>
+		INSERT INTO BOARD_YOUTUBE(
+			YTB_IDX,
+			YTB_TITLE,
+			YTB_URL,
+			YTB_INFO,
+			YTB_REGDATE,
+			YTB_HIT,
+			YTB_LIKE,
+			YTB_CHANNEL_NAME,
+			YTB_CHANNEL_URL,
+			YTB_THUMBNAIL,
+			MEM_ID,
+			YTB_CHANNEL_THUMB,
+			YTB_EMBED_URL)
+		VALUES(
+			#{ytbIdx},
+			#{ytbTitle},
+			#{ytbUrl},
+			#{ytbInfo},
+			SYSDATE,
+			0,
+			0,
+			#{ytbChannelName},
+			#{ytbChannelUrl},
+			#{ytbThumbnail},
+			#{memId},
+		    #{ytbChannelThumb},
+		    #{ytbEmbedUrl}
+		)
+	</insert>
+
+	<!-- 채널 구독 -->
+	<insert id="subsChannel" parameterType="hashmap">
+		<selectKey keyProperty="subIdx" resultType="Integer" order="BEFORE">
+			SELECT YTB_SUBSCRIBES_SEQ.nextval AS subIdx FROM DUAL
+		</selectKey>
+		INSERT INTO YTB_SUBSCRIBES(
+			SUB_IDX,
+			MEM_ID,
+			YTB_CHANNEL_NAME)
+		VALUES(
+			#{subIdx},
+		    #{memId},
+		    #{ytbChannelName})
+	</insert>
+
+	<!-- 댓글 등록 -->
+	<insert id="insertRe" parameterType="re">
+		<selectKey keyProperty="reIdx" resultType="Integer" order="BEFORE">
+			SELECT YTB_REPLY_SEQ.nextval AS reIdx FROM DUAL
+		</selectKey>
+		INSERT INTO YTB_REPLY(
+			RE_IDX,
+			MEM_ID,
+			RE_CONTENT,
+			RE_REG_DATE,
+			RE_UPDATE_DATE,
+			YTB_IDX
+		)
+		VALUES(
+			#{reIdx},
+		    #{memId},
+		    #{reContent},
+		    SYSDATE,
+		    null,
+		    #{ytbIdx}
+		)
+	</insert>
+
+	<!-- 대댓글 등록 -->
+	<insert id="insertReRe" parameterType="rere">
+		<selectKey keyProperty="rereIdx" resultType="Integer" order="BEFORE">
+			SELECT YTB_REPLY_REPLY_SEQ.nextval AS reIidx FROM DUAL
+		</selectKey>
+		INSERT INTO YTB_REPLY_REPLY(
+		RERE_IDX
+		RE_IDX,
+		MEM_ID,
+		RERE_CONTENT,
+		RERE_REG_DATE,
+		RERE_UPDATE_DATE,
+		RERE_ANNOTATION
+		)
+		VALUES(
+		#{rereIdx}
+		#{reIdx},
+		#{memId},
+		#{rereContent},
+		SYSDATE,
+		null,
+		#{rereAnnotation}
+		)
+	</insert>
+
+	<!-- UPDATE -->
+	<!-- 조회수 증가 -->
+	<update id="plusHit">
+		UPDATE BOARD_YOUTUBE SET YTB_HIT = YTB_HIT+1 WHERE YTB_IDX = #{ytbIdx}
+	</update>
+
+	<update id="updateRe" parameterType="hashmap">
+		UPDATE YTB_REPLY SET RE_CONTENT=#{reContent}, RE_UPDATE_DATE=SYSDATE WHERE RE_IDX=#{reIdx}
+	</update>
+
+	<update id="updateRere" parameterType="hashmap">
+		UPDATE YTB_REPLY_REPLY SET RERE_CONTENT=#{reContent}, RERE_UPDATE_DATE=SYSDATE WHERE RE_IDX=#{rereIdx}
+	</update>
+
+
+	<!--DELETE -->
+	<delete id="cancelSubs" parameterType="hashmap">
+		DELETE FROM YTB_SUBSCRIBES WHERE MEM_ID=#{memId} and YTB_CHANNEL_NAME=#{ytbChannelName}
+	</delete>
+
+	<delete id="deleteVideo" parameterType="String">
+		DELETE FROM BOARD_YOUTUBE WHERE YTB_IDX=#{ytbIdx}
+	</delete>
+
+	<delete id="deleteRe">
+		DELETE from YTB_REPLY WHERE RE_IDX=#{reIdx}
+ 	</delete>
+
+	<delete id="deleteReRe">
+		DELETE from YTB_REPLY_REPLY WHERE RERE_IDX=#{rereIdx}
+	</delete>
+
+</mapper>

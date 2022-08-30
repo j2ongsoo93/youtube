@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="boardFree">
+	<resultMap type="boardFree" id="boardFree">
+		<result column="BOARD_IDX" property="boardIdx"/>
+		<result column="USER_ID" property="userId"/>
+		<result column="USER_NAME" property="userName"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
+	</resultMap>
+
+	<!-- DYNAMIC -->
+	<sql id="listBoardFreeWhere">
+		<where>
+			<if test="keyword != null">
+				USER_ID LIKE '%${keyword[0]}%' OR
+				USER_NAME LIKE '%${keyword[0]}%' OR
+				BOARD_CONTENT LIKE '%${keyword[0]}%'
+			</if>
+		</where>
+	</sql>
+
+	<!-- SELECT -->
+	<select id="listBoardFree" resultType="boardFree" parameterType="hashmap">
+		SELECT * FROM BOARD_FREE
+		<include refid="listBoardFreeWhere"/>
+	</select>
+
+	<select id="detailBoardFree" resultType="hashmap">
+		SELECT * FROM BOARD_FREE WHERE BOARD_IDX = #{boardIdx}
+	</select>
+
+	<!-- INSERT -->
+	<insert id="insertBoardFree" parameterType="hashmap" useGeneratedKeys="true" keyProperty="boardIdx">
+		<selectKey keyProperty="boardIdx" resultType="Integer" order="BEFORE">
+			SELECT BOARD_FREE_SEQ.nextval AS BOARDIDX FROM DUAL
+		</selectKey>
+		INSERT INTO BOARD_FREE(BOARD_IDX, USER_ID, USER_NAME, BOARD_CONTENT)
+		VALUES(
+		       #{boardIdx},
+		       #{userId},
+		       #{userName},
+		       #{boardContent}
+		       )
+	</insert>
+
+	<!-- UPDATE -->
+	<update id="updateBoardFree" parameterType="hashmap">
+		UPDATE BOARD_FREE
+		SET USER_ID = <choose><when test="userId != null">#{userId}</when><otherwise>NULL</otherwise></choose>
+		,USER_NAME = <choose><when test="userName != null">#{userName}</when><otherwise>NULL</otherwise></choose>
+		,BOARD_CONTENT = <choose><when test="boardContent != null">#{boardContent}</when><otherwise>NULL</otherwise></choose>
+		WHERE BOARD_IDX = #{boardIdx}
+	</update>
+
+	<!-- DELETE -->
+	<delete id="deleteBoardFree" parameterType="hashmap">
+		DELETE FROM BOARD_FREE
+		WHERE BOARD_IDX = #{boardIdx}
+	</delete>
+</mapper>

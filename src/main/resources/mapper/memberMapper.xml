@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+	<resultMap type="member" id="member">
+		<result column="MEM_ID" 		property="memId"/>
+		<result column="MEM_NAME" 		property="memName"/>
+		<result column="PASSWORD" 		property="password"/>
+		<result column="REGIST_DATE" 	property="registDate"/>
+		<result column="UPDATE_DATE" 	property="updateDate"/>
+		<result column="REGIST_ID" 		property="registId"/>
+		<result column="UPDATE_ID" 		property="updateId"/>
+		<result column="REGIST_IP" 		property="registIp"/>
+		<result column="UPDATE_IP" 		property="updateIp"/>
+		<result column="MEM_PROFILE" 	property="memProfile"/>
+		<result column="MEM_EMAIL" 		property="memEmail"/>
+		<result column="ENABLED" 		property="enabled"/>
+		<collection property="img" resultMap="img"/>
+	</resultMap>
+
+	<resultMap id="img" type="img">
+		<result column="IMG_IDX"		property="imgIdx"/>
+		<result column="IMG_FILE_NAME"	property="imgFileName"/>
+		<result column="MEM_ID"			property="memId"/>
+	</resultMap>
+
+	<!-- DYNAMIC -->
+
+
+	<!-- SELECT -->
+	<select id="listMember" resultType="member" parameterType="hashmap">
+		SELECT * FROM MEMBER
+	</select>
+
+	<select id="detailMember" resultType="memberDTO">
+		SELECT *
+			FROM MEMBER
+			WHERE MEM_ID = #{memId}
+	</select>
+
+	<!-- INSERT -->
+	<insert id="insertMember" parameterType="hashmap">
+		INSERT INTO MEMBER(
+				MEM_ID,
+				MEM_NAME,
+				PASSWORD,
+				REGIST_DATE,
+				REGIST_ID,
+				REGIST_IP,
+				MEM_PROFILE,
+				MEM_EMAIL,
+				ENABLED)
+		VALUES(
+		       	#{memId},
+		       	#{memName},
+		       	#{password},
+		       	SYSDATE,
+		       	#{registId},
+		       	#{registIp},
+				#{memProfile},
+		       	#{memEmail},
+				#{enabled}
+		       )
+	</insert>
+
+	<!-- 권한 등록 -->
+	<insert id="insertMemberAuth" parameterType="hashmap">
+		INSERT INTO MEMBER_AUTH(MEM_ID, AUTHORITY) VALUES (#{memId}, 'user')
+	</insert>
+
+	<!-- 프로필 이미지 파일명 등록 -->
+	<insert id="insertMemberProfileImg" parameterType="hashmap">
+		<selectKey keyProperty="imgIdx" resultType="Integer" order="BEFORE">
+			SELECT IMG_IDX_SEQ.nextval AS ytbIdx FROM DUAL
+		</selectKey>
+		INSERT INTO MEMBER_PROFILE_IMG(IMG_IDX, IMG_FILE_NAME, MEM_ID) VALUES(#{imgIdx}, #{imgFileName}, #{memId})
+	</insert>
+
+	<!-- UPDATE -->
+	<update id="updateMember" parameterType="hashmap">
+		UPDATE MEMBER
+		SET
+		    PASSWORD = <choose><when test="password != null">#{password}</when><otherwise>NULL</otherwise></choose>
+			,UPDATE_DATE = SYSDATE
+			<choose><when test="updateId != null">,UPDATE_ID = #{updateId}</when></choose>
+			<choose><when test="updateIp != null">,UPDATE_IP = #{updateIp}</when></choose>
+			<choose><when test="memProfile != null">,MEM_PROFILE = #{memProfile}</when></choose>
+			<choose><when test="memEmail != null">,MEM_EMAIL = #{memEmail}</when></choose>
+			<choose><when test="enabled != null">,ENABLED = #{enabled}</when></choose>
+		WHERE MEM_ID = #{memId}
+	</update>
+	<update id="updateMemberAuth" parameterType="hashmap">
+		UPDATE MEMBER_AUTH SET AUTHORITY=#{auth} WHERE MEM_ID=#{memId}
+	</update>
+
+	<!-- DELETE -->
+	<delete id="deleteMember" parameterType="hashmap">
+		DELETE FROM MEMBER
+		WHERE MEM_ID = #{memId}
+	</delete>
+</mapper>
