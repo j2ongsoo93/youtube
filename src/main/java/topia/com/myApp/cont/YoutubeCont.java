@@ -69,7 +69,7 @@ public class YoutubeCont {
 
         ys.insert(inputData);
 
-//        //유튜브 메인 크롤링하여 저장
+//        //유튜브 메인 크롤링하여 샘플데이터 저장
 //        YoutubeMain youtubeMain = new YoutubeMain();
 //        ArrayList<Object> arr = youtubeMain.crawlYoutube("https://www.youtube.com/");
 //        for(int i=0;i<arr.size();i++){
@@ -155,6 +155,7 @@ public class YoutubeCont {
     @RequestMapping(value = "/youtube/play/regReRe", method = RequestMethod.POST)
     @ResponseBody
     public int regReRe(@RequestBody YtbReplyReply rere){
+        System.out.println(rere);
         return ys.regReRe(rere);
     }
 }

@@ -104,13 +104,12 @@ create table AUTH
 
 create table YTB_REPLY
 (
-    RE_IDX      NUMBER         not null
-        primary key,
-    MEM_ID      VARCHAR2(200)
-        references MEMBER,
-    RE_CONTENT  VARCHAR2(4000) not null,
-    RE_REG_DATE DATE           not null,
-    YTB_IDX     NUMBER
+    RE_IDX          NUMBER          not null primary key,
+    MEM_ID          VARCHAR2(200)   references MEMBER,
+    RE_CONTENT      VARCHAR2(4000)  not null,
+    RE_REG_DATE     DATE            not null,
+    RE_UPDATE_DATE  DATE,
+    YTB_IDX         NUMBER
         references BOARD_YOUTUBE
 )
 /
@@ -125,21 +124,28 @@ create table YTB_REPLY_REPLY
         references MEMBER,
     RERE_CONTENT    VARCHAR2(4000) not null,
     RERE_REG_DATE   DATE           not null,
+    RERE_UPDATE_DATE  DATE,
     RERE_ANNOTATION VARCHAR2(200)
 )
 /
 
-create sequence BOARD_FREE_SEQ stat with 10000
+create sequence BOARD_FREE_SEQ start with 10000
 /
 
-create sequence MEMBER_SEQ with 10000
+create sequence MEMBER_SEQ start with 10000
 /
 
 create sequence BOARD_YOUTUBE_SEQ start with 10000
 /
 
-create sequence YTB_SUBSCRIBES_SEQ with 10000
+create sequence YTB_SUBSCRIBES_SEQ start with 10000
 /
 
-create sequence IMG_IDX_SEQ with 10000
+create sequence IMG_IDX_SEQ start with 10000
+/
+
+create sequence YTB_REPLY_SEQ start with 10000
+/
+
+create sequence YTB_REPLY_REPLY_SEQ start with 10000
 /

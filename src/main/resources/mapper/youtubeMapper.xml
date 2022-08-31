@@ -191,7 +191,7 @@
 			SELECT YTB_REPLY_REPLY_SEQ.nextval AS reIidx FROM DUAL
 		</selectKey>
 		INSERT INTO YTB_REPLY_REPLY(
-		RERE_IDX
+		RERE_IDX,
 		RE_IDX,
 		MEM_ID,
 		RERE_CONTENT,
@@ -200,7 +200,7 @@
 		RERE_ANNOTATION
 		)
 		VALUES(
-		#{rereIdx}
+		#{rereIdx},
 		#{reIdx},
 		#{memId},
 		#{rereContent},

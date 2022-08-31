@@ -98,7 +98,7 @@ public class MemberServImpl implements MemberServ {
         logger.info("Upload File Size : " + multi.getSize());
         
         //이미지 파일 업로드
-        String uploadPath = "C:/topiaIT/myApp_intelliJ/src/main/webapp/resources/upload/profileImg";
+        String uploadPath = "C:/TopiaIt/youtube/src/main/webapp/resources/upload/profileImg";
         String originalFileName = multi.getOriginalFilename();
         int idxOfDot = multi.getOriginalFilename().lastIndexOf(".");
         String extension = originalFileName.substring(idxOfDot+1);
