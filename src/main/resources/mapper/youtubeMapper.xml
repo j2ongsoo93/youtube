@@ -102,12 +102,12 @@
 
 	<!-- 댓글 조회 -->
 	<select id="listRe" resultMap="re" parameterType="Integer">
-		SELECT * FROM YTB_REPLY WHERE YTB_IDX=#{ytbIdx} ORDER BY RE_REG_DATE DESC
+		SELECT * FROM YTB_REPLY WHERE YTB_IDX=#{ytbIdx} ORDER BY RE_REG_DATE
 	</select>
 
 	<!-- 댓글 조회 -->
 	<select id="listReRe" resultMap="rere">
-		SELECT * FROM YTB_REPLY_REPLY WHERE RE_IDX=#{reIdx} ORDER BY RERE_REG_DATE DESC
+		SELECT * FROM YTB_REPLY_REPLY WHERE RE_IDX=#{reIdx} ORDER BY RERE_REG_DATE
 	</select>
 
 	<!-- INSERT -->

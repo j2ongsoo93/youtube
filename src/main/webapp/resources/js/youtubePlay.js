@@ -22,7 +22,7 @@ $(function(){
    //memId, 채널명 저장
    let ytbChannelName = $('#channelName').attr('channelName');
 
-   // 구독 여부 기본값
+   //구독 여부 기본값
    let isSubscribed = false;
 
    let inputData;
@@ -137,6 +137,7 @@ $(function(){
       }
    });
 
+//==================================== 댓글 ====================================
    //댓글 등록
    $(document).on('click', '#btnRegRe', function(){
       let reContent = $('#reInput').val();
@@ -233,13 +234,13 @@ $(function(){
    }
 
    //대대댓글 입력 폼 생성 function
-   let createReReReplyForm = function(rereIdx, memId){
+   let createReReReplyForm = function(reIdx, memId){
       let reReReplyInputForm;
 
       reReReplyInputForm = $(
           '<div id="regReReReForm" class="regReReForm py-2 d-flex" style="width: 100%">\n' +
           '   <div class="ml-5">\n' +
-          '      <input id="rereInput" type="text" class="form-control ml-3" rereidx="'+rereIdx+'" style="width: 37vw" placeholder="답글 추가..." value="@'+memId+'&nbsp;&nbsp;&nbsp;">\n' +
+          '      <input id="rereInput" type="text" class="form-control ml-3" reIdx="'+reIdx+'" style="width: 37vw" placeholder="답글 추가..." value="@'+memId+'&nbsp;&nbsp;&nbsp;">\n' +
           '   </div>\n' +
           '   <div class="ml-auto">\n' +
           '      <button id="btnCancelRegReRe" class="btn ml-auto mr-1"><span class="font-weight-bold" style="color: #00c9a7">취소</span></button>\n' +
@@ -268,7 +269,7 @@ $(function(){
             imgFileName = "img.png";
          }
          // console.log(loginInfo);
-         
+
          //댓글 출력 부분
          let reply;
          if(memId == this.memId){
@@ -298,7 +299,7 @@ $(function(){
                 '   </div>' +
                 '</div>');
          }
-         
+
          //댓글 하단 대댓글 출력 부분
          let reReList = requestReReList(this.reIdx);
          console.log("========== 대댓글 리스트 ==========");
@@ -311,6 +312,7 @@ $(function(){
                 '   </div>\n' +
                 '</div>'
             );
+
             $.each(reReList, function(){
                let loginInfo = getLoginInfo(this.memId);
                let reReImgFileName;
@@ -332,7 +334,7 @@ $(function(){
                    '         <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+reReImgFileName+'" alt="" style="width: 38px; height: 38px">\n' +
                    '         <div class="ml-3 mb-2">\n' +
                    '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
-                   '            <span>'+rereAnnotation+'</span>'+this.rereContent+'</span><a id="btnPrintReReReForm" rereidx="'+this.rereIdx+'" class="ml-3">답글</a>\n' +
+                   '            <span>'+rereAnnotation+'</span>'+this.rereContent+'</span><a id="btnPrintReReReForm" reidx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3">답글</a>\n' +
                    '         </div>\n' +
                    '      </div>\n' +
                    '      </div>\n' +
@@ -369,10 +371,11 @@ $(function(){
    //대댓글의 답글 클릭 시 답글 입력 폼 생성
    $(document).on('click', '#btnPrintReReReForm', function(){
       let reReplyFormId = '#reReply'+$(this).attr('rereidx');
-      let rereIdx = $(this).attr('rereidx');
+      let reIdx = $(this).attr('reidx');
+      let toWho = $(this).attr('memid');
       console.log(reReplyFormId);
       $('.regReReForm').remove();
-      $(reReplyFormId).append(createReReReplyForm(rereIdx, 'memId'));
+      $(reReplyFormId).append(createReReReplyForm(reIdx, toWho));
    });
 
    //답글 취소시 답글 입력 폼 제거
@@ -425,6 +428,26 @@ let printVideoRecommendList = function(condition){
    });
 }
 
+//날짜변환 함수
+function createdAt(dateRaw) {
+   const milliSeconds = new Date() - new Date(dateRaw)
+   const seconds = milliSeconds / 1000
+   if (seconds < 60) return `방금 전`
+   const minutes = seconds / 60
+   if (minutes < 60) return `${Math.floor(minutes)}분 전`
+   const hours = minutes / 60
+   if (hours < 24) return `${Math.floor(hours)}시간 전`
+   const days = hours / 24
+   if (days < 7) return `${Math.floor(days)}일 전`
+   const weeks = days / 7
+   if (weeks < 5) return `${Math.floor(weeks)}주 전`
+   const months = days / 30
+   if (months < 12) return `${Math.floor(months)}개월 전`
+   const years = days / 365
+   return `${Math.floor(years)}년 전`;
+}
+
+//==================================== 댓글 ====================================
 let requestReplyList = function(ytbIdx){
    let re;
    $.ajax({
@@ -437,7 +460,6 @@ let requestReplyList = function(ytbIdx){
    });
    return re;
 }
-
 let requestReReList = function(reIdx){
    let re;
    $.ajax({
@@ -465,23 +487,3 @@ let getLoginInfo = function(memId){
    })
    return re;
 }
-
-//날짜변환 함수
-function createdAt(dateRaw) {
-   const milliSeconds = new Date() - new Date(dateRaw)
-   const seconds = milliSeconds / 1000
-   if (seconds < 60) return `방금 전`
-   const minutes = seconds / 60
-   if (minutes < 60) return `${Math.floor(minutes)}분 전`
-   const hours = minutes / 60
-   if (hours < 24) return `${Math.floor(hours)}시간 전`
-   const days = hours / 24
-   if (days < 7) return `${Math.floor(days)}일 전`
-   const weeks = days / 7
-   if (weeks < 5) return `${Math.floor(weeks)}주 전`
-   const months = days / 30
-   if (months < 12) return `${Math.floor(months)}개월 전`
-   const years = days / 365
-   return `${Math.floor(years)}년 전`;
-}
-
