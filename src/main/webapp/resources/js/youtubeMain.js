@@ -1,6 +1,6 @@
 $(function (){
     contextPath = $('#contextPath').val();
-    console.log("Main01")
+    console.log("Main02")
     let memId = $('#memId').val();
     let auth = $('#auth').val();
 
@@ -26,7 +26,7 @@ $(function (){
     //manager 이상 등급 로그인 시 영상 관리 버튼 출력
     if(auth == "master" || auth == "manager"){
         $('#managerBtnContainer').append(
-            '<button id="manageVideos" class="btn btn-light mr-2" style="width: 100px">영상 관리</button>\n' +
+            '<button id="manageVideos" class="btn btn-light mr-2" style="width: 100px">회원 관리</button>\n' +
             '<button id="listView" class="btn btn-light mr-2" style="width: 100px">리스트 보기</button>'
         );
     }
@@ -36,7 +36,7 @@ $(function (){
         let managerBtnContainer = $('#managerBtnContainer');
         managerBtnContainer.empty();
         managerBtnContainer.append(
-            '<button id="manageVideos" class="btn btn-light mr-2" style="width: 100px">영상 관리</button>\n' +
+            '<button id="manageVideos" class="btn btn-light mr-2" style="width: 100px">회원 관리</button>\n' +
             '<button id="thumbView" class="btn btn-light mr-2" style="width: 100px">썸네일 보기</button>'
         );
         const container = $('#videoListContainer');

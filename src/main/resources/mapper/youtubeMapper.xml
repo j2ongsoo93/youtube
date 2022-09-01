@@ -220,8 +220,8 @@
 		UPDATE YTB_REPLY SET RE_CONTENT=#{reContent}, RE_UPDATE_DATE=SYSDATE WHERE RE_IDX=#{reIdx}
 	</update>
 
-	<update id="updateRere" parameterType="hashmap">
-		UPDATE YTB_REPLY_REPLY SET RERE_CONTENT=#{reContent}, RERE_UPDATE_DATE=SYSDATE WHERE RE_IDX=#{rereIdx}
+	<update id="updateReRe" parameterType="hashmap">
+		UPDATE YTB_REPLY_REPLY SET RERE_CONTENT=#{rereContent}, RERE_UPDATE_DATE=SYSDATE WHERE RERE_IDX=#{rereIdx}
 	</update>
 
 

@@ -1,5 +1,5 @@
 $(function(){
-   console.log("youtubePlay.js 01")
+   console.log("youtubePlay.js 02")
 
    contextPath = $('#contextPath').val();
    if($('#profileImgFile').val()!= ''){
@@ -8,12 +8,12 @@ $(function(){
       profileImgName = "img.png"
    )
 
+   console.log("profileImgName: "+profileImgName);
+   console.log("ContextPath: "+contextPath);
+
    //영상 인덱스 가져오기
    let str = location.href.split("/");
    let ytbIdx = str[str.length - 1];
-
-   console.log("profileImgName: "+profileImgName);
-   console.log("ContextPath: "+contextPath);
 
    // info의 /n을 <br>로 치환
    let content = $('#ytbInfo').html();
@@ -138,6 +138,69 @@ $(function(){
    });
 
 //==================================== 댓글 ====================================
+   //댓글 수정
+   $(document).on('click', '#btnUpdateRe', function(){
+      let input = $('#reUpdateInput');
+      let reIdx = $('#reUpdateInput').attr('reidx');
+      let reContent = $('#reUpdateInput').val();
+      if(reContent!=""){
+         let reInputData = {
+            "reIdx": reIdx,
+            "reContent": reContent
+         };
+
+         console.log(reInputData);
+
+         $.ajax({
+            url: contextPath+'/youtube/play/updateRe',
+            method: 'post',
+            data: JSON.stringify(reInputData),
+            contentType: 'application/json',
+            success: function(data){
+               if(data == 1){
+                  $('#reInput').val('');
+                  printReply(ytbIdx, memId);
+               }
+            },
+            async:false
+         });
+      }else{
+         alert('댓글을 입력해주세요.');
+      }
+   });
+
+   //대댓글 수정
+   $(document).on('click', '#btnUpdateReRe', function(){
+      let rereIdx = $('#rereUpdateInput').attr('rereidx');
+      let rereContent = $('#rereUpdateInput').val();
+      console.log(rereIdx);
+      console.log(rereContent);
+
+      if(rereContent!=""){
+         let inputData = {
+            "rereContent": rereContent,
+            "rereIdx": rereIdx
+         };
+
+         console.log(inputData);
+
+         $.ajax({
+            url: contextPath+'/youtube/play/updateReRe',
+            method: 'post',
+            data: JSON.stringify(inputData),
+            contentType: 'application/json',
+            success: function(data){
+               if(data == 1){
+                  printReply(ytbIdx, memId);
+               }
+            },
+            async:false
+         });
+      }else{
+         alert('답글을 입력해주세요.');
+      }
+   });
+
    //댓글 등록
    $(document).on('click', '#btnRegRe', function(){
       let reContent = $('#reInput').val();
@@ -201,19 +264,58 @@ $(function(){
       }
    });
 
-   //댓글 입력 폼
-   let replyInputForm = $(
-       '<div class="regReForm py-2 d-flex" style="width: 100%">\n' +
-       '   <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+profileImgName+'" alt="" style="width: 38px; height: 38px">\n' +
-       '   <div class="ml-3">\n' +
-       '      <input id="reInput" type="text" class="form-control" style="width: 42vw" placeholder="댓글 추가...">\n' +
-       '   </div>\n' +
-       '   <div class="ml-auto">\n' +
-       '      <button id="btnCancelRegRe" class="btn ml-auto mr-1"><span class="font-weight-bold" style="color: #00c9a7">취소</span></button>\n' +
-       '      <button id="btnRegRe" type="button" class="btn btn-light ml-auto mr-1"><span class="font-weight-bold">댓글</span></button>\n' +
-       '   </div>\n' +
-       '</div>'
-   );
+   //댓글 삭제
+   $(document).on('click', '#btnDeleteRe', function(){
+      let reIdx = $(this).attr('reidx');
+      let re = confirm('댓글을 완전히 삭제하시겠습니까?');
+      console.log(re);
+
+      if(re){
+         $.ajax({
+            url: contextPath+'/youtube/play/deleteRe/'+reIdx,
+            method: 'post',
+            success: function(data){
+               console.log('삭제완료');
+               printReply(ytbIdx, memId);
+            }
+         });
+      }
+   });
+
+   //대댓글 삭제
+   $(document).on('click', '#btnDeleteReRe', function(){
+      let rereIdx = $(this).attr('rereidx');
+      let re = confirm('댓글을 완전히 삭제하시겠습니까?');
+      console.log(re);
+
+      if(re){
+         $.ajax({
+            url: contextPath+'/youtube/play/deleteReRe/'+rereIdx,
+            method: 'post',
+            success: function(data){
+               console.log('삭제완료');
+               printReply(ytbIdx, memId);
+            }
+         });
+      }
+   });
+
+   //댓글 입력 폼 생성 function
+   let createReplyForm = function(){
+      let replyInputForm = $(
+          '<div class="regReForm py-2 d-flex" style="width: 100%">\n' +
+          '   <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+profileImgName+'" alt="" style="width: 38px; height: 38px">\n' +
+          '   <div class="ml-3">\n' +
+          '      <input id="reInput" type="text" class="form-control" style="width: 42vw" placeholder="댓글 추가...">\n' +
+          '   </div>\n' +
+          '   <div class="ml-auto">\n' +
+          '      <button id="btnCancelRegRe" class="btn ml-auto mr-1"><span class="font-weight-bold" style="color: #00c9a7">취소</span></button>\n' +
+          '      <button id="btnRegRe" type="button" class="btn btn-light ml-auto mr-1"><span class="font-weight-bold">댓글</span></button>\n' +
+          '   </div>\n' +
+          '</div>'
+      );
+      return replyInputForm;
+   }
 
    //대댓글 입력 폼 생성 function
    let createReReplyForm = function(reIdx){
@@ -221,8 +323,9 @@ $(function(){
 
       reReplyInputForm = $(
           '<div id="regReReForm" class="regReReForm py-2 d-flex" style="width: 100%">\n' +
-          '   <div class="ml-5">\n' +
-          '      <input id="rereInput" type="text" class="form-control ml-3" reIdx="'+reIdx+'" style="width: 41vw" placeholder="답글 추가...">\n' +
+          '   <img class="rounded-circle ml-5" src="'+contextPath+'/resources/upload/profileImg/'+profileImgName+'" alt="" style="width: 38px; height: 38px">\n' +
+          '   <div class="">\n' +
+          '      <input id="rereInput" type="text" class="form-control ml-3" reIdx="'+reIdx+'" style="width: 39vw" placeholder="답글 추가...">\n' +
           '   </div>\n' +
           '   <div class="ml-auto">\n' +
           '      <button id="btnCancelRegReRe" class="btn ml-auto mr-1"><span class="font-weight-bold" style="color: #00c9a7">취소</span></button>\n' +
@@ -239,8 +342,9 @@ $(function(){
 
       reReReplyInputForm = $(
           '<div id="regReReReForm" class="regReReForm py-2 d-flex" style="width: 100%">\n' +
-          '   <div class="ml-5">\n' +
-          '      <input id="rereInput" type="text" class="form-control ml-3" reIdx="'+reIdx+'" style="width: 37vw" placeholder="답글 추가..." value="@'+memId+'&nbsp;&nbsp;&nbsp;">\n' +
+          '   <img class="rounded-circle ml-5" src="'+contextPath+'/resources/upload/profileImg/'+profileImgName+'" alt="" style="width: 38px; height: 38px">\n' +
+          '   <div class="">\n' +
+          '      <input id="rereInput" type="text" class="form-control ml-3" reIdx="'+reIdx+'" style="width: 35vw" placeholder="답글 추가..." value="@'+memId+'&nbsp;&nbsp;&nbsp;">\n' +
           '   </div>\n' +
           '   <div class="ml-auto">\n' +
           '      <button id="btnCancelRegReRe" class="btn ml-auto mr-1"><span class="font-weight-bold" style="color: #00c9a7">취소</span></button>\n' +
@@ -251,7 +355,43 @@ $(function(){
       return reReReplyInputForm;
    }
 
-   // 댓글창 출력
+   //댓글 수정 폼 생성 function
+   let createReplyUpdateForm = function(reIdx, content){
+      let replyInputForm = $(
+          '<div class="regReReForm py-2 d-flex" style="width: 100%">\n' +
+          '   <img class="rounded-circle ml-5" src="'+contextPath+'/resources/upload/profileImg/'+profileImgName+'" alt="" style="width: 38px; height: 38px">\n' +
+          '   <div class="ml-3">\n' +
+          '      <input id="reUpdateInput" type="text" class="form-control" reidx="'+reIdx+'" style="width: 40vw" placeholder="댓글 추가..." value="'+content+'">\n' +
+          '   </div>\n' +
+          '   <div class="ml-auto">\n' +
+          '      <button id="btnCancelRegReRe" class="btn ml-auto mr-1"><span class="font-weight-bold" style="color: #00c9a7">취소</span></button>\n' +
+          '      <button id="btnUpdateRe" type="button" class="btn btn-light ml-auto mr-1"><span class="font-weight-bold">수정</span></button>\n' +
+          '   </div>\n' +
+          '</div>'
+      );
+      return replyInputForm;
+   }
+
+   //대댓글 수정 폼 생성 function
+   let createReReplyUpdateForm = function(rereIdx, content){
+      let reReplyInputForm;
+
+      reReplyInputForm = $(
+          '<div id="regReReForm" class="regReReForm py-2 d-flex" style="width: 100%">\n' +
+          '   <img class="rounded-circle ml-5" src="'+contextPath+'/resources/upload/profileImg/'+profileImgName+'" alt="" style="width: 38px; height: 38px">\n' +
+          '   <div class="">\n' +
+          '      <input id="rereUpdateInput" type="text" class="form-control ml-3" rereIdx="'+rereIdx+'" style="width: 35vw" placeholder="답글 추가..." value="'+content+'">\n' +
+          '   </div>\n' +
+          '   <div class="ml-auto">\n' +
+          '      <button id="btnCancelRegReRe" class="btn ml-auto mr-1"><span class="font-weight-bold" style="color: #00c9a7">취소</span></button>\n' +
+          '      <button id="btnUpdateReRe" type="button" class="btn btn-light ml-auto mr-1"><span class="font-weight-bold">수정</span></button>\n' +
+          '   </div>\n' +
+          '</div>'
+      );
+      return reReplyInputForm;
+   }
+
+   // 댓글리스트 출력
    let printReply = function(ytbIdx, memId){
       let container = $('#replyContainer');
       container.empty();
@@ -279,14 +419,14 @@ $(function(){
                 '      <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+imgFileName+'" alt="" style="width: 38px; height: 38px">\n' +
                 '      <div class="ml-3">\n' +
                 '         <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+regDate+'</span><br>\n' +
-                '         <span>'+this.reContent+'</span>' +
-                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3">답글</a>\n' +
-                '         <a id="btnUpdateRe" reIdx="'+this.reIdx+'" class="ml-1">수정</a>\n' +
+                '         <span id="recontent'+this.reIdx+'">'+this.reContent+'</span>' +
+                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3 createReplyForm">답글</a>\n' +
+                '         <a id="createReUpdateForm" reIdx="'+this.reIdx+'" class="ml-1">수정</a>\n' +
                 '         <a id="btnDeleteRe" reIdx="'+this.reIdx+'" class="ml-1">삭제</a>\n' +
                 '      </div>\n' +
                 '   </div>' +
                 '</div>');
-         }else{
+         }else if(memId != this.memId && memId != undefined){
             reply = $(
                 '<div id="reply'+this.reIdx+'" class="py-2">' +
                 '   <div class="d-flex mb-1" style="width: 100%">\n' +
@@ -294,7 +434,19 @@ $(function(){
                 '      <div class="ml-3">\n' +
                 '         <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+regDate+'</span><br>\n' +
                 '         <span>'+this.reContent+'</span>' +
-                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3">답글</a>\n' +
+                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3 createReplyForm">답글</a>\n' +
+                '      </div>\n' +
+                '   </div>' +
+                '</div>');
+         }else if(memId == undefined){
+            reply = $(
+                '<div id="reply'+this.reIdx+'" class="py-2">' +
+                '   <div class="d-flex mb-1" style="width: 100%">\n' +
+                '      <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+imgFileName+'" alt="" style="width: 38px; height: 38px">\n' +
+                '      <div class="ml-3">\n' +
+                '         <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+regDate+'</span><br>\n' +
+                '         <span>'+this.reContent+'</span>' +
+                '         <a href="'+contextPath+'/member/login" class="ml-3 createReplyForm">답글</a>\n' +
                 '      </div>\n' +
                 '   </div>' +
                 '</div>');
@@ -308,7 +460,7 @@ $(function(){
             let collapseHead = $(
                 '<div class="ml-5 pl-3">\n' +
                 '   <div id=reIdx'+this.reIdx+' class="accordion">\n' +
-                '      <a class="btn-link" type="button" data-toggle="collapse" data-target="#collapse'+this.reIdx+'" aria-expanded="true" aria-controls="collapse'+this.reIdx+'">답글 '+reReList.length+'개</a>\n' +
+                '      <a class="btn-link createReplyForm" type="button" data-toggle="collapse" data-target="#collapse'+this.reIdx+'" aria-expanded="true" aria-controls="collapse'+this.reIdx+'">답글 '+reReList.length+'개</a>\n' +
                 '   </div>\n' +
                 '</div>'
             );
@@ -327,18 +479,52 @@ $(function(){
                   rereAnnotation = "@"+this.rereAnnotation
                }
 
-               let reReply = $(
-                   '   <div id="collapse'+this.reIdx+'" class="collapse" aria-labelledby="heading'+this.reIdx+'" data-parent="#reIdx'+this.reIdx+'">\n' +
-                   '      <div id="reReply'+this.rereIdx+'">\n' +
-                   '      <div class="d-flex pt-2">\n' +
-                   '         <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+reReImgFileName+'" alt="" style="width: 38px; height: 38px">\n' +
-                   '         <div class="ml-3 mb-2">\n' +
-                   '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
-                   '            <span>'+rereAnnotation+'</span>'+this.rereContent+'</span><a id="btnPrintReReReForm" reidx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3">답글</a>\n' +
-                   '         </div>\n' +
-                   '      </div>\n' +
-                   '      </div>\n' +
-                   '   </div>');
+               let reReply;
+               if(memId == this.memId){
+                  reReply = $(
+                      '<div id="collapse'+this.reIdx+'" class="collapse" aria-labelledby="heading'+this.reIdx+'" data-parent="#reIdx'+this.reIdx+'">\n' +
+                      '   <div id="reReply'+this.rereIdx+'">\n' +
+                      '      <div class="d-flex pt-2">\n' +
+                      '         <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+reReImgFileName+'" alt="" style="width: 38px; height: 38px">\n' +
+                      '         <div class="ml-3 mb-2">\n' +
+                      '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
+                      '            <span>'+rereAnnotation+'</span><span id="rerecontent'+this.rereIdx+'">'+this.rereContent+'</span>' +
+                      '            <a id="btnPrintReReReForm" rereidx="'+this.rereIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3 createReplyForm">답글</a>\n' +
+                      '            <a id="createReReUpdateForm" reIdx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" class="ml-1">수정</a>\n' +
+                      '            <a id="btnDeleteReRe" reIdx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" class="ml-1">삭제</a>\n' +
+                      '         </div>\n' +
+                      '      </div>\n' +
+                      '    </div>\n' +
+                      '</div>');
+               }else if(memId != this.memId && memId != undefined){
+                  reReply = $(
+                      '<div id="collapse'+this.reIdx+'" class="collapse" aria-labelledby="heading'+this.reIdx+'" data-parent="#reIdx'+this.reIdx+'">\n' +
+                      '   <div id="reReply'+this.rereIdx+'">\n' +
+                      '      <div class="d-flex pt-2">\n' +
+                      '         <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+reReImgFileName+'" alt="" style="width: 38px; height: 38px">\n' +
+                      '         <div class="ml-3 mb-2">\n' +
+                      '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
+                      '            <span>'+rereAnnotation+'</span><span>'+this.rereContent+'</span>' +
+                      '            <a id="btnPrintReReReForm" reidx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3 createReplyForm">답글</a>\n' +
+                      '         </div>\n' +
+                      '      </div>\n' +
+                      '   </div>\n' +
+                      '</div>');
+               }else if(memId == undefined){
+                  reReply = $(
+                      '<div id="collapse'+this.reIdx+'" class="collapse" aria-labelledby="heading'+this.reIdx+'" data-parent="#reIdx'+this.reIdx+'">\n' +
+                      '   <div id="reReply'+this.rereIdx+'">\n' +
+                      '      <div class="d-flex pt-2">\n' +
+                      '         <img class="rounded-circle ml-2" src="'+contextPath+'/resources/upload/profileImg/'+reReImgFileName+'" alt="" style="width: 38px; height: 38px">\n' +
+                      '         <div class="ml-3 mb-2">\n' +
+                      '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
+                      '            <span>'+rereAnnotation+'</span><span >'+this.rereContent+'</span>' +
+                      '            <a href="'+contextPath+'/member/login" class="ml-3 createReplyForm">답글</a>\n' +
+                      '         </div>\n' +
+                      '      </div>\n' +
+                      '   </div>\n' +
+                      '</div>');
+               }
                $(collapseHead).append(reReply);
             });
             $(reply).append(collapseHead)
@@ -350,7 +536,7 @@ $(function(){
    //로그인 시 댓글 입력창 표시
    let printReplyInputForm = function(memId){
       if(memId != undefined){
-         $('#replyContainer').append(replyInputForm);
+         $('#replyContainer').append(createReplyForm());
       }
    }
 
@@ -380,7 +566,33 @@ $(function(){
 
    //답글 취소시 답글 입력 폼 제거
    $(document).on('click', '#btnCancelRegReRe', function(){
-      $('#regReReForm').remove();
+      $('.regReReForm').remove();
+   });
+
+   //댓글 수정 버튼 클릭 시 수정 폼 생성
+   $(document).on('click', '#createReUpdateForm', function(){
+      let replyFormId = '#reply'+$(this).attr('reidx');
+      let reIdx = $(this).attr('reidx');
+      let content = $('#recontent'+reIdx).html();
+      let form = createReplyUpdateForm(reIdx, content);
+      $('.regReReForm').remove();
+      // $(replyFormId).empty();
+      $(replyFormId).append(form);
+      console.log(replyFormId);
+      console.log(reIdx);
+      console.log(content);
+   });
+
+   //대댓글 수정 버튼 클릭 시 수정 폼 생성
+   $(document).on('click', '#createReReUpdateForm', function(){
+      let reReplyFormId = '#reReply'+$(this).attr('rereidx');
+      let rereIdx = $(this).attr('rereidx');
+      let content = $('#rerecontent'+rereIdx).html();
+      let form = createReReplyUpdateForm(rereIdx, content);
+      $('.regReReForm').remove();
+      $(reReplyFormId).append(form);
+      console.log(rereIdx);
+      console.log(content);
    });
 
    printReply(ytbIdx, memId);

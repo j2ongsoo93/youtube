@@ -57,4 +57,9 @@ public class ViewCont {
         return "regVideo";
     }
 
+    //회원 관리 페이지
+    @RequestMapping(value = "/youtube/member/admin")
+    public String memberAdmin(Model model){
+        return "memberAdmin";
+    }
 }

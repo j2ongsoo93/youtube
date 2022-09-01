@@ -125,4 +125,25 @@ public class YoutubeServ {
     public int regReRe(YtbReplyReply rere){
         return (Integer)dao.insert("insertReRe", rere);
     }
+
+    //댓글 수정
+    public int updateRe(YtbReply re){
+        return (Integer)dao.update("updateRe", re);
+    }
+
+    //대댓글 수정
+    public int updateReRe(YtbReplyReply rere){
+        System.out.println(rere);
+        return (Integer)dao.update("updateReRe", rere);
+    }
+
+    //댓글 삭제
+    public int deleteRe(int reIdx){
+        return (Integer)dao.delete("deleteRe", reIdx);
+    }
+
+    //대댓글 삭제
+    public int deleteReRe(int rereIdx){
+        return (Integer)dao.delete("deleteReRe", rereIdx);
+    }
 }

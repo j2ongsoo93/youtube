@@ -66,6 +66,9 @@
                             </div>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#"><i class="feather-edit mr-1"></i> 계정설정</a>
+                            <c:if test="${l.getAuthority() eq 'master' or l.getAuthority() eq 'manager'}">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/youtube/member/admin"><i class="feather-edit mr-1"></i> 회원관리</a>
+                            </c:if>
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/youtube/myPage"><i class="feather-user mr-1"></i> 마이페이지</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="feather-log-out mr-1"></i> 로그아웃</a>

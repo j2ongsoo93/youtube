@@ -158,4 +158,34 @@ public class YoutubeCont {
         System.out.println(rere);
         return ys.regReRe(rere);
     }
+
+    //댓글 수정
+    @RequestMapping(value = "/youtube/play/updateRe", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateRe(@RequestBody YtbReply re){
+        System.out.println(re);
+        return ys.updateRe(re);
+    }
+
+    //대댓글 수정
+    @RequestMapping(value = "/youtube/play/updateReRe", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateReRe(@RequestBody YtbReplyReply rere){
+        System.out.println(rere);
+        return ys.updateReRe(rere);
+    }
+
+    //댓글 삭제
+    @RequestMapping(value = "youtube/play/deleteRe/{reIdx}", method = RequestMethod.POST)
+    @ResponseBody
+    public int deleteRe(@PathVariable int reIdx){
+        return ys.deleteRe(reIdx);
+    }
+
+    //댓글 삭제
+    @RequestMapping(value = "youtube/play/deleteReRe/{rereIdx}", method = RequestMethod.POST)
+    @ResponseBody
+    public int deleteReRe(@PathVariable int rereIdx){
+        return ys.deleteReRe(rereIdx);
+    }
 }
