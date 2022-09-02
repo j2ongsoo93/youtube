@@ -66,7 +66,6 @@ let requestMemList = function(condition){
             console.log("ERROR")
         }
     });
-
     return list;
 }
 
@@ -212,8 +211,6 @@ let printMemberList = function(list){
 
     $.each(list, function(){
         //selectBox selected
-
-
         if(this.authority == 'master'){
             $('option[class="'+this.memId+'Master"]').prop('selected', true);
         }else if(this.authority == 'manager'){
@@ -227,9 +224,7 @@ let printMemberList = function(list){
         }else{
             $('option[class="'+this.memId+'Disabled"]').prop('selected', true);
         }
-
     });
-
 }
 
 let dateFormatter = function(isoDate){
@@ -264,7 +259,7 @@ let insertMemberInfo = function(memberInfo, fileTagId, memId){
         error: function(){
             alert("오류가 발생하였습니다,");
         }
-    })
+    });
 }
 
 //프로필 사진 업로드
