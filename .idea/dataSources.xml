@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="youtube" uuid="35300198-9611-44ef-96f2-389dc9dd4e05">
+    <data-source source="LOCAL" name="youtube" uuid="00de64fe-8bd0-43ad-ab4c-68d4f280a68e">
       <driver-ref>oracle.19</driver-ref>
       <synchronize>true</synchronize>
       <auto-commit>false</auto-commit>

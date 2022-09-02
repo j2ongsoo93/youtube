@@ -21,6 +21,23 @@
 		<collection property="img" resultMap="img"/>
 	</resultMap>
 
+	<resultMap type="memberDTO" id="memberDTO">
+		<result column="MEM_ID" 		property="memId"/>
+		<result column="MEM_NAME" 		property="memName"/>
+		<result column="PASSWORD" 		property="password"/>
+		<result column="REGIST_DATE" 	property="registDate"/>
+		<result column="UPDATE_DATE" 	property="updateDate"/>
+		<result column="REGIST_ID" 		property="registId"/>
+		<result column="UPDATE_ID" 		property="updateId"/>
+		<result column="REGIST_IP" 		property="registIp"/>
+		<result column="UPDATE_IP" 		property="updateIp"/>
+		<result column="MEM_PROFILE" 	property="memProfile"/>
+		<result column="MEM_EMAIL" 		property="memEmail"/>
+		<result column="ENABLED" 		property="enabled"/>
+		<result column="AUTHORITY" 		property="authority"/>
+		<result column="IMG_FILE_NAME" 	property="imgFileName"/>
+	</resultMap>
+
 	<resultMap id="img" type="img">
 		<result column="IMG_IDX"		property="imgIdx"/>
 		<result column="IMG_FILE_NAME"	property="imgFileName"/>
@@ -28,9 +45,39 @@
 	</resultMap>
 
 	<!-- DYNAMIC -->
+	<sql id="memberSearchWhere">
+		<where>
+			m.MEM_ID = a.MEM_ID and
+			m.MEM_ID = p.MEM_ID(+)
+			<if test="keyword != null and keyword != ''">
+				<choose>
+					<when test="searchCol != null and searchCol != ''">
+						and #{searchCol} like '%'||#{keyword}||'%'
+					</when>
+					<when test="searchCol == null or searchCol != ''">
+						or MEM_ID like '%'||#{keyword}||'%'
+						or MEM_NAME like '%'||#{keyword}||'%'
+						or REGIST_DATE like '%'||#{keyword}||'%'
+						or UPDATE_DATE like '%'||#{keyword}||'%'
+						or REGIST_ID like '%'||#{keyword}||'%'
+						or UPDATE_ID like '%'||#{keyword}||'%'
+						or MEM_EMAIL like '%'||#{keyword}||'%'
+						or ENABLED like '%'||#{keyword}||'%'
+						or AUTHORITY like '%'||#{keyword}||'%'
+					</when>
+				</choose>
+			</if>
+		</where>
+	</sql>
 
 
 	<!-- SELECT -->
+	<!-- 회원 검색 -->
+	<select id="searchMember" resultMap="memberDTO" parameterType="memberSearchCondition">
+		SELECT * FROM MEMBER m, MEMBER_AUTH a, MEMBER_PROFILE_IMG p
+		<include refid="memberSearchWhere"></include>
+	</select>
+
 	<select id="listMember" resultType="member" parameterType="hashmap">
 		SELECT * FROM MEMBER
 	</select>
@@ -80,21 +127,27 @@
 	</insert>
 
 	<!-- UPDATE -->
+	<!-- 회원정보 수정 -->
 	<update id="updateMember" parameterType="hashmap">
 		UPDATE MEMBER
 		SET
-		    PASSWORD = <choose><when test="password != null">#{password}</when><otherwise>NULL</otherwise></choose>
-			,UPDATE_DATE = SYSDATE
+			UPDATE_DATE = SYSDATE
+		    <choose><when test="password != null">,PASSWORD = #{password}</when></choose>
 			<choose><when test="updateId != null">,UPDATE_ID = #{updateId}</when></choose>
 			<choose><when test="updateIp != null">,UPDATE_IP = #{updateIp}</when></choose>
-			<choose><when test="memProfile != null">,MEM_PROFILE = #{memProfile}</when></choose>
 			<choose><when test="memEmail != null">,MEM_EMAIL = #{memEmail}</when></choose>
 			<choose><when test="enabled != null">,ENABLED = #{enabled}</when></choose>
 		WHERE MEM_ID = #{memId}
 	</update>
+
 	<update id="updateMemberAuth" parameterType="hashmap">
-		UPDATE MEMBER_AUTH SET AUTHORITY=#{auth} WHERE MEM_ID=#{memId}
+		UPDATE MEMBER_AUTH SET AUTHORITY=#{authority} WHERE MEM_ID=#{memId}
 	</update>
+
+	<!-- 프로필 이미지 파일명 수정 -->
+	<insert id="updateMemberProfileImg" parameterType="hashmap">
+		UPDATE MEMBER_PROFILE_IMG SET IMG_FILE_NAME = #{imgFileName} where MEM_ID = #{memId}
+	</insert>
 
 	<!-- DELETE -->
 	<delete id="deleteMember" parameterType="hashmap">

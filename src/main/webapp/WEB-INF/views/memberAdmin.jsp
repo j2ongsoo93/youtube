@@ -19,56 +19,53 @@
     <script src="${pageContext.request.contextPath}/resources/js/memberAdmin.js"></script>
 
 </head>
-<body>
+<body class="modal-open">
 <jsp:include page="navbar.jsp"/>
 <div class="py-4">
     <div style="width: 80%;  padding-right: 15px;  padding-left: 15px;  margin-right: auto;  margin-left: auto;">
-        <div class="col col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+        <div class="col-12">
             <div class="row">
                 <div class="d-flex ml-3">
-                    <c:if test="${l.getImg_file_name() eq null}">
-                        <img class="rounded-circle" src="${pageContext.request.contextPath}/resources/upload/profileImg/img.png" style="width: 80px;height: 80px;">
-                    </c:if>
-                    <c:if test="${l.getImg_file_name() != null}">
-                        <img class="rounded-circle" src="${pageContext.request.contextPath}/resources/upload/profileImg/${l.getImg_file_name()}" style="width: 80px;height: 80px;">
-                    </c:if>
-                    <h2 class="mt-2 ml-3 font-weight-bold">${l.getMem_name()}<br><span><h6 class="mt-2">${l.getMem_id()}</h6></span></h2>
+
+                    <h2 class="mt-2 ml-3 font-weight-bold">회원 관리<br><span><h6 class="mt-2">접속계정: ${l.getMem_id()} 권한:${l.getAuthority()}</h6></span></h2>
                 </div>
             </div>
         </div>
-        <div class="col col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-            <div class="box shadow-sm border rounded bg-white mt-5 osahan-share-post">
-                <ul class="nav nav-justified border-bottom osahan-line-tab" id="myTab" role="tablist">
-                    <li class="nav-item" id="btnMyVideos">
-                        <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true"><i class="feather-play-circle"></i> 내 영상</a>
-                    </li>
-                    <li class="nav-item" id="btnPlayList">
-                        <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false"><i class="feather-list"></i> 재생목록</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <hr>
-        <div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="row pb-2">
-                <div id="btnContainer">
-                    <button id="btnRegVideo" class="btn btn-light" style="border:none">영상 등록</button>
-                    <button id="btnDeleteVideo" class="btn btn-light ml-2" style="border:none">선택 삭제</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="box shadow-sm border rounded bg-white mb-3 osahan-share-post">
-                    <div class="row" id="myVideosContainer">
 
-                    </div>
-
-                    <div class="row" id="playListContainer">
-
-                    </div>
-                </div>
-            </div>
+        <div id="memListContainer" class="col-12 py-2">
+<%--            <table class="table table-dark">--%>
+<%--                <thead id="memListHead">--%>
+<%--                    <tr>--%>
+<%--                        <th>ID</th>--%>
+<%--                        <th>이름</th>--%>
+<%--                        <th>가입일</th>--%>
+<%--                        <th>수정일</th>--%>
+<%--                        <th>가입 IP</th>--%>
+<%--                        <th>수정 IP</th>--%>
+<%--                        <th>email</th>--%>
+<%--                        <th>상태</th>--%>
+<%--                        <th>권한</th>--%>
+<%--                        <th>프로필</th>--%>
+<%--                    </tr>--%>
+<%--                </thead>--%>
+<%--                <tbody id="memListBody">--%>
+<%--                    <tr>--%>
+<%--                        <td>1</td>--%>
+<%--                        <td>2</td>--%>
+<%--                        <td>3</td>--%>
+<%--                        <td>4</td>--%>
+<%--                        <td>5</td>--%>
+<%--                        <td>6</td>--%>
+<%--                        <td>7</td>--%>
+<%--                        <td>8</td>--%>
+<%--                        <td>9</td>--%>
+<%--                        <td>10</td>--%>
+<%--                    </tr>--%>
+<%--                </tbody>--%>
+            </table>
         </div>
     </div>
+
 </div>
 </body>
 </html>

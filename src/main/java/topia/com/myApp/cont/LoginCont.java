@@ -9,14 +9,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import topia.com.myApp.dto.LoginInfoDTO;
 import topia.com.myApp.dto.MemberDTO;
+import topia.com.myApp.entity.Member;
+import topia.com.myApp.searchCondition.MemberSearchCondition;
 import topia.com.myApp.serv.LoginServ;
 import topia.com.myApp.serv.MemberServImpl;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 
 @Controller
@@ -59,11 +63,28 @@ public class LoginCont {
         return re;
     }
 
+    //회원정보 수정
+    @RequestMapping(value = "/member/update", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateMember(@RequestBody MemberDTO dto, Principal principal, Model model){
+        int re = -1;
+        logger.info(String.valueOf(dto));
+        re = ms.update(dto, principal);
+        return re;
+    }
+
     //회원 프로필 사진 업로드
     @RequestMapping(value = "/member/sign-up/upload/profileImg", method = RequestMethod.POST)
     @ResponseBody
     public int uploadProfileImg(@RequestParam("profileImg") MultipartFile multi, @RequestParam("memId") String memId){
         return ms.uploadProfileImg(multi, memId);
+    }
+
+    //회원 프로필 사진 수정
+    @RequestMapping(value = "/member/sign-up/upload/profileImg/update", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateProfileImg(@RequestParam("profileImg") MultipartFile multi, @RequestParam("memId") String memId){
+        return ms.updateProfileImg(multi, memId);
     }
 
     //파일명 생성 메서드(안씀)
@@ -81,13 +102,11 @@ public class LoginCont {
         return fileName;
     }
 
-    //회원정보 수정
-    @RequestMapping(value = "/member/update", method = RequestMethod.POST)
+
+    //회원 조회
+    @RequestMapping(value = "/member/search", method = RequestMethod.POST)
     @ResponseBody
-    public int updateMember(MemberDTO dto, Principal principal, Model model){
-        int re = -1;
-        System.out.println(dto.toString());
-        re = ms.update(dto, principal);
-        return re;
+    public List<MemberDTO> searchMember(@RequestBody MemberSearchCondition condition){
+        return ms.searchMember(condition);
     }
 }

@@ -17,5 +17,6 @@
 		<typeAlias type="topia.com.myApp.entity.MemberProfileImg" alias="img"/>
 		<typeAlias type="topia.com.myApp.entity.YtbReply" alias="re"/>
 		<typeAlias type="topia.com.myApp.entity.YtbReplyReply" alias="rere"/>
+		<typeAlias type="topia.com.myApp.searchCondition.MemberSearchCondition" alias="memberSearchCondition"/>
 	</typeAliases>
 </configuration>

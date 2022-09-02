@@ -9,5 +9,8 @@
         </node>
       </scope>
     </mapping>
+    <mapping uuid="c142d35c-642a-4f1e-85a1-497b8066af0a" name="youtube Mapping">
+      <data-sources db="00de64fe-8bd0-43ad-ab4c-68d4f280a68e" />
+    </mapping>
   </component>
 </project>

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import topia.com.myApp.cont.LoginCont;
 import topia.com.myApp.dao.AbstractDAO;
 import topia.com.myApp.dto.MemberDTO;
+import topia.com.myApp.searchCondition.MemberSearchCondition;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.net.UnknownHostException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class MemberServImpl implements MemberServ {
@@ -64,17 +66,20 @@ public class MemberServImpl implements MemberServ {
         try {
             inputData.put("memId", dto.getMemId());
             inputData.put("password", dto.getPassword());
-            inputData.put("memProfile", dto.getMemProfile());
             inputData.put("memEmail", dto.getMemEmail());
             inputData.put("updateDate", null);
             inputData.put("updateId", principal.getName());
-            inputData.put("updateIp", InetAddress.getLocalHost().toString());
-            inputData.put("enable", dto.getEnabled());
+            inputData.put("updateIp", InetAddress.getLocalHost().toString().split("/")[1]);
+            inputData.put("enabled", dto.getEnabled());
+            inputData.put("authority", dto.getAuthority());
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
 
         re = (Integer) dao.update("updateMember",inputData);
+        if(re == 1){
+            dao.update("updateMemberAuth",inputData);
+        }
 
         return re;
     }
@@ -92,13 +97,19 @@ public class MemberServImpl implements MemberServ {
         return dto;
     }
 
+    @Override
+    public int delete(int Idx) {
+        return 0;
+    }
+    
+    //이미지 업로드, 파일명 insert
     public int uploadProfileImg(MultipartFile multi, String memId){
         logger.info("=======================================================");
         logger.info("Upload File Name : " + multi.getOriginalFilename());
         logger.info("Upload File Size : " + multi.getSize());
         
         //이미지 파일 업로드
-        String uploadPath = "C:/Users/j2ong/OneDrive/문서/GitHub/youtube/src/main/webapp/resources/upload/profileImg";
+        String uploadPath = "C:/GitHub/youtube/src/main/webapp/resources/upload/profileImg";
         String originalFileName = multi.getOriginalFilename();
         int idxOfDot = multi.getOriginalFilename().lastIndexOf(".");
         String extension = originalFileName.substring(idxOfDot+1);
@@ -119,9 +130,39 @@ public class MemberServImpl implements MemberServ {
         inputData.put("memId", memId);
         return (Integer) dao.insert("insertMemberProfileImg", inputData);
     }
+    
+    //이미지 업로드, 파일명 update
+    public int updateProfileImg(MultipartFile multi, String memId){
+        logger.info("=======================================================");
+        logger.info("Upload File Name : " + multi.getOriginalFilename());
+        logger.info("Upload File Size : " + multi.getSize());
 
-    @Override
-    public int delete(int Idx) {
-        return 0;
+        //이미지 파일 업로드
+        String uploadPath = "C:/GitHub/youtube/src/main/webapp/resources/upload/profileImg";
+        String originalFileName = multi.getOriginalFilename();
+        int idxOfDot = multi.getOriginalFilename().lastIndexOf(".");
+        String extension = originalFileName.substring(idxOfDot+1);
+        String saveFileName = memId+"_"+multi.getOriginalFilename();
+
+        try {
+            if(!multi.isEmpty()){
+                File file = new File(uploadPath, saveFileName);
+                multi.transferTo(file);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //DB에 파일명 등록
+        HashMap<String, Object> inputData = new HashMap<>();
+        inputData.put("imgFileName", saveFileName);
+        inputData.put("memId", memId);
+        return (Integer) dao.insert("updateMemberProfileImg", inputData);
     }
+    
+    //회원 검색
+    public List<MemberDTO> searchMember(MemberSearchCondition condition){
+        return (ArrayList<MemberDTO>)dao.selectList("searchMember", condition);
+    }
+
 }
