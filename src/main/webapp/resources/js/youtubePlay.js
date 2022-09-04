@@ -420,9 +420,9 @@ $(function(){
                 '      <div class="ml-3">\n' +
                 '         <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+regDate+'</span><br>\n' +
                 '         <span id="recontent'+this.reIdx+'">'+this.reContent+'</span>' +
-                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3 createReplyForm">답글</a>\n' +
-                '         <a id="createReUpdateForm" reIdx="'+this.reIdx+'" class="ml-1">수정</a>\n' +
-                '         <a id="btnDeleteRe" reIdx="'+this.reIdx+'" class="ml-1">삭제</a>\n' +
+                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3 createReplyForm" style="cursor:pointer">답글</a>\n' +
+                '         <a id="createReUpdateForm" reIdx="'+this.reIdx+'" class="ml-1" style="cursor:pointer">수정</a>\n' +
+                '         <a id="btnDeleteRe" reIdx="'+this.reIdx+'" class="ml-1" style="cursor:pointer">삭제</a>\n' +
                 '      </div>\n' +
                 '   </div>' +
                 '</div>');
@@ -434,7 +434,7 @@ $(function(){
                 '      <div class="ml-3">\n' +
                 '         <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+regDate+'</span><br>\n' +
                 '         <span>'+this.reContent+'</span>' +
-                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3 createReplyForm">답글</a>\n' +
+                '         <a id="btnPrintReReForm" reIdx="'+this.reIdx+'" class="ml-3 createReplyForm" style="cursor:pointer">답글</a>\n' +
                 '      </div>\n' +
                 '   </div>' +
                 '</div>');
@@ -446,7 +446,7 @@ $(function(){
                 '      <div class="ml-3">\n' +
                 '         <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+regDate+'</span><br>\n' +
                 '         <span>'+this.reContent+'</span>' +
-                '         <a href="'+contextPath+'/member/login" class="ml-3 createReplyForm">답글</a>\n' +
+                '         <a href="'+contextPath+'/member/login" class="ml-3 createReplyForm" style="cursor:pointer">답글</a>\n' +
                 '      </div>\n' +
                 '   </div>' +
                 '</div>');
@@ -489,9 +489,9 @@ $(function(){
                       '         <div class="ml-3 mb-2">\n' +
                       '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
                       '            <span>'+rereAnnotation+'</span><span id="rerecontent'+this.rereIdx+'">'+this.rereContent+'</span>' +
-                      '            <a id="btnPrintReReReForm" rereidx="'+this.rereIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3 createReplyForm">답글</a>\n' +
-                      '            <a id="createReReUpdateForm" reIdx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" class="ml-1">수정</a>\n' +
-                      '            <a id="btnDeleteReRe" reIdx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" class="ml-1">삭제</a>\n' +
+                      '            <a id="btnPrintReReReForm" rereidx="'+this.rereIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3 createReplyForm" style="cursor:pointer">답글</a>\n' +
+                      '            <a id="createReReUpdateForm" reIdx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" class="ml-1" style="cursor:pointer">수정</a>\n' +
+                      '            <a id="btnDeleteReRe" reIdx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" class="ml-1" style="cursor:pointer">삭제</a>\n' +
                       '         </div>\n' +
                       '      </div>\n' +
                       '    </div>\n' +
@@ -505,7 +505,7 @@ $(function(){
                       '         <div class="ml-3 mb-2">\n' +
                       '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
                       '            <span>'+rereAnnotation+'</span><span>'+this.rereContent+'</span>' +
-                      '            <a id="btnPrintReReReForm" reidx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3 createReplyForm">답글</a>\n' +
+                      '            <a id="btnPrintReReReForm" reidx="'+this.reIdx+'" rereidx="'+this.rereIdx+'" memid="'+this.memId+'" class="ml-3 createReplyForm" style="cursor:pointer">답글</a>\n' +
                       '         </div>\n' +
                       '      </div>\n' +
                       '   </div>\n' +
@@ -519,7 +519,7 @@ $(function(){
                       '         <div class="ml-3 mb-2">\n' +
                       '            <span class="font-weight-bold">'+this.memId+'</span><span class="ml-3" style="color: gray">'+rereRegDate+'</span><br>\n' +
                       '            <span>'+rereAnnotation+'</span><span >'+this.rereContent+'</span>' +
-                      '            <a href="'+contextPath+'/member/login" class="ml-3 createReplyForm">답글</a>\n' +
+                      '            <a href="'+contextPath+'/member/login" class="ml-3 createReplyForm" style="cursor:pointer">답글</a>\n' +
                       '         </div>\n' +
                       '      </div>\n' +
                       '   </div>\n' +
@@ -626,7 +626,7 @@ let printVideoRecommendList = function(condition){
       const container = $('#recommendContainer');
       let recommendedVideo = $(
           '<div class="py-2 d-flex">\n' +
-          '   <img src="'+this.ytbThumbnail+'" url="'+this.ytbIdx+'" class="img-fluid playThis" style="width: 40%;">\n' +
+          '   <img src="'+this.ytbThumbnail+'" url="'+this.ytbIdx+'" class="img-fluid playThis" style="width: 40%; cursor:pointer">\n' +
           '       <div class="pt-2 d-flex">\n' +
           '          <div class="ml-3">\n' +
           '               <a style="color: white; text-overflow:ellipsis;overflow:hidden; width: 100%;display: -webkit-box; -webkit-line-clamp: 2;-webkit-box-orient: vertical;" href="'+contextPath+'/youtube/play/'+this.ytbIdx+'"><span class="text-dark text-sm-left">'+this.ytbTitle+'</span></a>\n' +

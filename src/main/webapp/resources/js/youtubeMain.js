@@ -1,6 +1,6 @@
 $(function (){
     contextPath = $('#contextPath').val();
-    console.log("Main02")
+    console.log("Main03")
     let memId = $('#memId').val();
     let auth = $('#auth').val();
 
@@ -132,9 +132,9 @@ let printVideoList = function(condition){
         let regDate = createdAt(this.ytbRegDate);
         let divVideo = $(
             '<div class="col col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">\n' +
-            '   <img src="'+this.ytbThumbnail+'" url="'+this.ytbIdx+'" class="img-fluid playThis" style="width: 100%; height: 20vh;">\n' +
+            '   <img src="'+this.ytbThumbnail+'" url="'+this.ytbIdx+'" class="img-fluid playThis" style="width: 100%; height: 20vh; cursor:pointer;">\n' +
             '       <div class="pt-2 d-flex">\n' +
-            '          <img class="rounded-circle" src="'+this.ytbChannelThumb+'" alt="" style="width: 40px; height: 40px">\n' +
+            '          <img class="rounded-circle" src="'+this.ytbChannelThumb+'" alt="" style="width: 40px; height: 40px; cursor:pointer">\n' +
             '          <div class="ml-3">\n' +
             '               <a style="color: white; text-overflow:ellipsis;overflow:hidden; width: 100%;display: -webkit-box; -webkit-line-clamp: 2;-webkit-box-orient: vertical;" href="'+contextPath+'/youtube/play/'+this.ytbIdx+'"><span class="text-dark text-sm-left">'+this.ytbTitle+'</span></a>\n' +
             '               <span style="color: #74828e">'+this.memId+'</span>\n' +
@@ -193,8 +193,8 @@ let printSubsList = function(memId){
     $.each(subsList, function(){
        let channelInfo =  $('<div class="py-2 d-flex" style="width: 100%">\n' +
            '                    <input type="hidden" id="toChannel" url="'+this.ytbChannelUrl+'">\n' +
-           '                    <img class="rounded-circle ml-2 toChannel" url="'+this.ytbChannelUrl+'" src="'+this.ytbChannelThumb+'" alt="" style="width: 40px; height: 40px">\n' +
-           '                    <div class="ml-3 toChannel" url="'+this.ytbChannelUrl+'">\n' +
+           '                    <img class="rounded-circle ml-2 toChannel" url="'+this.ytbChannelUrl+'" src="'+this.ytbChannelThumb+'" alt="" style="width: 40px; height: 40px; cursor:pointer">\n' +
+           '                    <div class="ml-3 toChannel" url="'+this.ytbChannelUrl+'" style="cursor:pointer">\n' +
            '                        <span class="toChannel" url="'+this.ytbChannelUrl+'">'+this.ytbChannelName+'</span>\n' +
            '                    </div>\n' +
            '                </div>');
