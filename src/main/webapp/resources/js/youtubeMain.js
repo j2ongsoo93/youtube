@@ -79,9 +79,16 @@ $(function (){
         printSubsList(memId);
     }
 
+
+
+    // 채널정보 클릭 시 유튜브 채널로 이동
+    $(document).on('click', '.toChannel', function(){
+        location.href = $(this).attr('url');
+    });
+
     //무한스크롤
     $(window).scroll(function(){
-        if ($(window).scrollTop() + $(window).height() + 500 >= $(document).height()) {
+        if ($(window).scrollTop() +1000 >= $(document).height()) {
             pageNo = pageNo + 1;
             condition = {
                 "keyword": keyword,
@@ -96,12 +103,6 @@ $(function (){
             console.log(pageNo)
         }
     });
-
-    // 채널정보 클릭 시 유튜브 채널로 이동
-    $(document).on('click', '.toChannel', function(){
-        location.href = $(this).attr('url');
-    });
-
 });
 
 let ajaxRequest = function(condition){
@@ -132,7 +133,7 @@ let printVideoList = function(condition){
         let regDate = createdAt(this.ytbRegDate);
         let divVideo = $(
             '<div class="col col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">\n' +
-            '   <img src="'+this.ytbThumbnail+'" url="'+this.ytbIdx+'" class="img-fluid playThis" style="width: 100%; height: 20vh; cursor:pointer;">\n' +
+            '   <img src="'+this.ytbThumbnail+'" url="'+this.ytbIdx+'" class="img-fluid playThis" style="width: 100%; height: 22vh; cursor:pointer;">\n' +
             '       <div class="pt-2 d-flex">\n' +
             '          <img class="rounded-circle" src="'+this.ytbChannelThumb+'" alt="" style="width: 40px; height: 40px; cursor:pointer">\n' +
             '          <div class="ml-3">\n' +

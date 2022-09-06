@@ -48,20 +48,20 @@
                         <!-- 영상 설명 end -->
 
                         <!-- 좋아요 싫어요 추가 -->
-                        <div class="py-2 d-flex">
-                            <h5 class="d-flex"><i class="feather-thumbs-up mr-2"></i><h6>${y.ytbLike}</h6></h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <h5 class="d-flex"><i class="feather-thumbs-down mr-2"></i><h6>n</h6></h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <h5 class="d-flex"><i class="feather-list mr-2"></i><h6>재생목록에 추가</h6></h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </div>
+<%--                        <div class="py-2 d-flex">--%>
+<%--                            <h5 class="d-flex"><i class="feather-thumbs-up mr-2"></i><h6>${y.ytbLike}</h6></h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--%>
+<%--                            <h5 class="d-flex"><i class="feather-thumbs-down mr-2"></i><h6>n</h6></h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--%>
+<%--                            <h5 class="d-flex"><i class="feather-list mr-2"></i><h6>재생목록에 추가</h6></h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--%>
+<%--                        </div>--%>
                         <!-- 좋아요 싫어요 추가 end -->
 
                         <!-- 채널 버튼 -->
                         <div id="subsInfoContainer" class="py-2 border d-flex" style="width: 50%">
                             <input type="hidden" id="channelName" channelName="${y.ytbChannelName}">
                             <input type="hidden" id="toChannel" url="${y.ytbChannelUrl}">
-                            <img class="rounded-circle ml-2 toChannel" src="${y.ytbChannelThumb}" alt="" style="width: 40px; height: 40px">
+                            <img class="rounded-circle ml-2 toChannel" src="${y.ytbChannelThumb}" alt="" style="width: 40px; height: 40px; cursor:pointer">
                             <div class="ml-3">
-                                <span><h6 class="font-weight-bold toChannel">${y.ytbChannelName}</h6></span>
+                                <span><h6 class="font-weight-bold toChannel" style="cursor: pointer">${y.ytbChannelName}</h6></span>
                             </div>
 
                         </div>

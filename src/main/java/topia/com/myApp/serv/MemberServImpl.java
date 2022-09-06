@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import topia.com.myApp.cont.LoginCont;
 import topia.com.myApp.dao.AbstractDAO;
 import topia.com.myApp.dto.MemberDTO;
+import topia.com.myApp.excel.ExcelUtil;
 import topia.com.myApp.searchCondition.MemberSearchCondition;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MemberServImpl implements MemberServ {
@@ -26,6 +28,9 @@ public class MemberServImpl implements MemberServ {
     private static final Logger logger = LoggerFactory.getLogger(LoginCont.class);
     @Autowired
     private AbstractDAO dao;
+
+    @Autowired
+    private ExcelUtil excelUtil;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -165,4 +170,13 @@ public class MemberServImpl implements MemberServ {
         return (ArrayList<MemberDTO>)dao.selectList("searchMember", condition);
     }
 
+    //엑셀 파일용 회원검색
+    public List<MemberDTO> searchMemberForExcel(){
+        return (ArrayList<MemberDTO>)dao.selectList("searchMemberForExcel");
+    }
+
+    //회원조회
+    public MemberDTO findById(String memId){
+        return (MemberDTO)dao.selectOne("findMemberById", memId);
+    }
 }

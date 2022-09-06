@@ -45,6 +45,11 @@ $(function(){
     let list = requestMemList(condition);
     console.log(list);
     printMemberList(requestMemList(condition));
+
+    $(document).on('click', '#btnExcelDownload', function(){
+        console.log("excel")
+        location.href = contextPath+"/member/search/downloadExcel"
+    })
 });
 
 let contextPath;
@@ -102,8 +107,8 @@ let printMemberList = function(list){
             '                        <td>'+this.memEmail+'</td>\n' +
             '                        <td>'+enabled+'</td>\n' +
             '                        <td>'+this.authority+'</td>\n' +
-            '                        <td><button type="button" class="btn btn-dark btn-sm" ' +
-            '                               data-toggle="modal" data-target="#'+this.memId+'"' +
+            '                        <td><button class="btn btn-dark btn-sm" ' +
+            '                               type="button" data-toggle="modal" data-target="#'+this.memId+'"' +
             '                               memId="'+this.memId+'">수정</button></td>\n' +
             '                    </tr>');
 

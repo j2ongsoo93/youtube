@@ -15,8 +15,7 @@
         <s:intercept-url pattern="/member/sign-up/**/**" access="permitAll" />
         <s:intercept-url pattern="/member/insert" access="permitAll" />
         <s:intercept-url pattern="/member/update" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_USER')" />
-        <s:intercept-url pattern="/member/search" access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')" />
-        <s:intercept-url pattern="/youtube/**" access="permitAll" />
+        <s:intercept-url pattern="/member/search/**" access="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')" />
         <s:intercept-url pattern="/youtube/reg" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER','ROLE_USER')" />
         <s:intercept-url pattern="/youtube/subsChannel" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER','ROLE_USER')" />
         <s:intercept-url pattern="/youtube/cancelChannel" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER','ROLE_USER')" />

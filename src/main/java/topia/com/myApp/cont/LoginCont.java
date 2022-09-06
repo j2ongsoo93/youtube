@@ -103,10 +103,18 @@ public class LoginCont {
     }
 
 
-    //회원 조회
+    //회원 검색
     @RequestMapping(value = "/member/search", method = RequestMethod.POST)
     @ResponseBody
     public List<MemberDTO> searchMember(@RequestBody MemberSearchCondition condition){
         return ms.searchMember(condition);
+    }
+
+    //회원 단일조회
+    @RequestMapping(value = "member/findById/{memId}", method = RequestMethod.POST)
+    @ResponseBody
+    public MemberDTO findById(@PathVariable String memId){
+        logger.info(memId);
+        return ms.findById(memId);
     }
 }

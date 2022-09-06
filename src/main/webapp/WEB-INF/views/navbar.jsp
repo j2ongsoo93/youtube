@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#"><i class="feather-edit mr-1"></i> 계정설정</a>
+                            <a class="dropdown-item" type="button" data-toggle="modal" data-target="#${l.getMem_id()}" memId="${l.getMem_id()}"><i class="feather-edit mr-1"></i> 계정설정</a>
                             <c:if test="${l.getAuthority() eq 'master' or l.getAuthority() eq 'manager'}">
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/youtube/member/admin"><i class="feather-edit mr-1"></i> 회원관리</a>
                             </c:if>
@@ -74,7 +74,6 @@
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/logout"><i class="feather-log-out mr-1"></i> 로그아웃</a>
                         </div>
                         <!-- 계정 정보 Dropdown end -->
-
                     </li>
                     <!-- Nav Item 계정 정보 -->
                 </c:otherwise>
@@ -83,7 +82,11 @@
     </div>
 </nav>
 <!-- navbar end -->
+<!-- 계정 설정 modal -->
+<div id="accountSettingModal">
 
+</div>
+<!-- 계정 설정 modal end -->
 <!-- Bootstrap core JavaScript -->
 <script src="${pageContext.request.contextPath}/resources/vendor/jquery/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

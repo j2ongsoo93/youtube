@@ -126,7 +126,7 @@ $(function(){
 
    //무한스크롤
    $(window).scroll(function(){
-      if ($(window).scrollTop() + $(window).height() + 500 >= $(document).height()) {
+      if ($(window).scrollTop() + 1000 >= $(document).height()) {
          pageNo = pageNo + 1;
          condition = {
             "keyword": "",

@@ -78,6 +78,23 @@
 		<include refid="memberSearchWhere"></include>
 	</select>
 
+	<select id="findMemberById" resultMap="memberDTO">
+		SELECT * FROM MEMBER m, MEMBER_AUTH a, MEMBER_PROFILE_IMG p
+		WHERE
+			m.MEM_ID = a.MEM_ID and
+			m.MEM_ID = p.MEM_ID and
+			m.MEM_ID = #{memId}
+	</select>
+
+	<!-- 회원 검색 엑셀용 -->
+	<select id="searchMemberForExcel" resultMap="memberDTO">
+		SELECT * FROM MEMBER m, MEMBER_AUTH a, MEMBER_PROFILE_IMG p
+		WHERE
+			m.MEM_ID = a.MEM_ID and
+			m.MEM_ID = p.MEM_ID
+	</select>
+
+
 	<select id="listMember" resultType="member" parameterType="hashmap">
 		SELECT * FROM MEMBER
 	</select>
